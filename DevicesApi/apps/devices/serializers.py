@@ -19,7 +19,7 @@ class DeviceSerializer(serializers.ModelSerializer):
             UniqueTogetherValidator(
                 queryset=Device.objects.all(),
                 fields=['type_id', 'serial_num'],
-                message="Серийный для этого типа устойств не уникален"
+                message="Серийный номер для этого типа устойств не уникален"
             )
         ]
         fields = ["id", "type_id", "serial_num", "note"]
