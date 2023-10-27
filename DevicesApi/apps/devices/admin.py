@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from .models import DeviceType, Device
+from .models import DeviceType
 
 # Register your models here.
 admin.site.register(DeviceType)
-admin.site.register(Device)
