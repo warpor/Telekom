@@ -9,8 +9,7 @@ class SoftDeleteManager(models.Manager):
 
 class SoftDeleteModel(models.Model):
     is_deleted = models.BooleanField(default=False)
-    objects = models.Manager()
-    undeleted_objects = SoftDeleteManager()
+    objects = SoftDeleteManager()
 
     def soft_delete(self):
         self.is_deleted = True
