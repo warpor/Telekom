@@ -13,6 +13,10 @@ const columns = [{
   label: 'note',
   sortable: true
 },
+{key: 'type_id',
+  label: 'type',
+  sortable: true
+},
 {key: 'actions'}
 ]
 
