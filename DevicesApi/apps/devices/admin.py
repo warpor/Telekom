@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import DeviceType
+from .models import EquipmentType
 
 # Register your models here.
-admin.site.register(DeviceType)
+admin.site.register(EquipmentType)

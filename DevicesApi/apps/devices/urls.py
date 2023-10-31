@@ -1,12 +1,11 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import DeviceViewSet, DeviceTypeViewSet, api_root
+from .views import EquipmentViewSet, EquipmentTypeViewSet
 
 router = DefaultRouter()
-router.register(r'equipment', DeviceViewSet, basename="equipment")
-router.register(r'equipment-type', DeviceTypeViewSet, basename="equipment-type")
+router.register(r'equipment', EquipmentViewSet, basename="equipment")
+router.register(r'equipment-type', EquipmentTypeViewSet, basename="equipment-type")
 
 urlpatterns = [
     path('', include(router.urls)),

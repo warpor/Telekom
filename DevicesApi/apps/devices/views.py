@@ -6,7 +6,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from .models import DeviceType, Device
+from .models import EquipmentType, Equipment
 from .serializers import DeviceTypeSerializer, DeviceSerializer
 from .service import multiple_objects_add
 
@@ -19,22 +19,27 @@ def api_root(request, format=None):
     })
 
 
-class DeviceTypeViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = DeviceType.objects.all()
+class EquipmentTypeViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = EquipmentType.objects.all()
     serializer_class = DeviceTypeSerializer
 
 
-class DeviceViewSet(viewsets.ModelViewSet):
-    queryset = Device.objects.all()
+class EquipmentViewSet(viewsets.ModelViewSet):
+    queryset = Equipment.objects.all()
     serializer_class = DeviceSerializer
     filter_backends = [DjangoFilterBackend,
                        filters.SearchFilter]
     filterset_fields = ['id', "type_id", "serial_num", "note"]
     search_fields = ['note', 'serial_num']
 
-    def destroy(self, request, *args, **kwargs):
+    def destroy(self, request: Request, *args, **kwargs) -> Response:
         """
         Производит мягкое удаление объекта
+
+        Возвращаемое значение
+        ---------------------
+        Response: Получилось ли удалить объект, если нет, то вернуть,
+         что объект не найден
         """
 
         try:
@@ -43,14 +48,23 @@ class DeviceViewSet(viewsets.ModelViewSet):
         except Http404:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def create(self, request: Request, *args, **kwargs):
+    def create(self, request: Request, *args, **kwargs) -> Response:
         """
         Если в запросе массив - пытается добавить массив объектов.
         Если в запросе один объект - пытается добавить один объект.
+
+        Параметры
+        ---------
+        request (Request): POST запрос, который может
+        содержать как один JSON, так и массив JSON-ов
+
+        Возвращаемое значение
+        ---------------------
+        Response: Получилось ли создать запись, если нет, то вернуть ошибки
         """
 
         is_many = isinstance(request.data, list)
         if not is_many:
-            return super(DeviceViewSet, self).create(request, *args, **kwargs)
+            return super(EquipmentViewSet, self).create(request, *args, **kwargs)
         else:
             return multiple_objects_add(self, request)

@@ -2,7 +2,7 @@ import re
 
 from rest_framework import serializers
 
-from .models import DeviceType
+from .models import EquipmentType
 
 regex_map = {
     "N": r"\d",
@@ -15,24 +15,27 @@ regex_map = {
 
 class SerialNumValidator:
 
-    def get_serial_mask(self, device_type: DeviceType) -> str:
-        """
-        Возвращает маску серийного номера
-        """
-
-        return device_type.serial_num_mask
-
     def __call__(self, attrs):
-        serial_mask = self.get_serial_mask(attrs["type_id"])
+        serial_mask: str = attrs["type_id"].serial_num_mask
         if not self.check_serial_num(serial_mask, attrs["serial_num"]):
             raise serializers.ValidationError("Серийный номер не подходит под маску")
 
-    def check_serial_num(self, serial_mask, serial_num):
+    def check_serial_num(self, serial_mask: str, serial_num: str):
         """
-        Проверяет серийный номер на соотвеетствие маске
+        Проверяет серийный номер на соответствие маске
+
+        Параметры
+        ---------
+        serial_mask (str): Серийная маска типа оборудования
+
+        serial_num (str): Серийный номер оборудования
+
+        Возвращаемое значение
+        ---------------------
+        bool: Соответствует ли серийный номер серийной маске
         """
 
-        new_mask: list[str] = []
+        new_mask = []
         for each_num in serial_mask:
             new_mask.append(regex_map[each_num])
         if re.fullmatch("".join(new_mask), serial_num):
